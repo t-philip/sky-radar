@@ -1,0 +1,18 @@
+name: Question or idea
+description: Setup help or a suggestion
+title: "[Question]: "
+labels: ["question"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Copy `skyradar.ini.example` to `skyradar.ini` and set your own coordinates —
+        that's the usual first step. Don't paste your finished `skyradar.ini` here,
+        since it holds your location.
+
+  - type: textarea
+    id: body
+    attributes:
+      label: What would you like to know?
+    validations:
+      required: true

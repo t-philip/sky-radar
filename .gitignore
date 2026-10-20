@@ -1,0 +1,30 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.ruff_cache/
+
+# Virtual environments
+venv/
+.venv/
+env/
+
+# Local configuration — copy skyradar.ini.example to skyradar.ini
+skyradar.ini
+
+# Runtime logs (JSONL flight logs are runtime artifacts, not source)
+logs/*.jsonl
+
+# Editor / tooling
+.claude/
+.vscode/
+.idea/
+
+# OS
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# Private vocabulary for scripts/check_privacy.sh -- local only, never committed.
+/.privacy-denylist.private

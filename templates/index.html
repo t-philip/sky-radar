@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sky Radar</title>
+
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+  <!-- App CSS -->
+  <link rel="stylesheet" href="/static/css/style.css" />
+</head>
+<body>
+
+  <!-- ============================================================
+       BANNERS (injected by JS)
+  ============================================================ -->
+  <div id="banner-replay" class="banner banner-amber" style="display:none;">
+    ⏪ REPLAY MODE — showing imported log data. Reload page to return to live.
+  </div>
+  <div id="banner-error" class="banner banner-yellow" style="display:none;"></div>
+  <div id="banner-disconnect" class="banner banner-red" style="display:none;">
+    ⚠ Connection lost — reconnecting…
+  </div>
+
+  <!-- ============================================================
+       HEADER
+  ============================================================ -->
+  <header class="header">
+    <div class="header-left">
+      <span class="header-title">🛩 Sky Radar</span>
+      <div class="header-location">
+        <input id="input-location-name" type="text" class="header-input" placeholder="Location name" />
+        <input id="input-radius" type="number" class="header-input header-input-sm" placeholder="Radius km" min="1" max="500" />
+        <button id="btn-update-config" class="btn btn-secondary btn-sm">Update</button>
+      </div>
+    </div>
+    <div class="header-right">
+      <span id="last-poll-label" class="header-meta">Last poll: —</span>
+      <span id="mode-badge" class="badge badge-green">LIVE</span>
+    </div>
+  </header>
+
+  <!-- ============================================================
+       MAIN CONTENT: Map + Sidebar
+  ============================================================ -->
+  <div class="main-row">
+
+    <!-- Map -->
+    <div class="map-container">
+      <div id="map"></div>
+    </div>
+
+    <!-- Sidebar: Watchlist + Stats -->
+    <aside class="sidebar">
+
+      <!-- Watchlist panel -->
+      <section class="panel">
+        <h2 class="panel-title">Watchlist</h2>
+        <div id="watchlist-tags" class="watchlist-tags"></div>
+        <div class="watchlist-input-row">
+          <input id="input-watchlist-entry" type="text" class="input-field" placeholder="ICAO24 or callsign" />
+          <button id="btn-add-watch" class="btn btn-primary btn-sm">Add</button>
+        </div>
+      </section>
+
+      <!-- Stats panel -->
+      <section class="panel">
+        <h2 class="panel-title">Stats</h2>
+        <div class="stats-grid">
+          <div class="stat-item">
+            <span class="stat-label">In range</span>
+            <span id="stat-total" class="stat-value">0</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Airborne</span>
+            <span id="stat-airborne" class="stat-value">0</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">On ground</span>
+            <span id="stat-ground" class="stat-value">0</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Alerts</span>
+            <span id="stat-alerts" class="stat-value stat-alert">0</span>
+          </div>
+        </div>
+        <div class="stat-meta">
+          <span class="stat-label">Last poll:</span>
+          <span id="stat-last-poll">—</span>
+        </div>
+        <div class="stat-meta">
+          <span class="stat-label">Mode:</span>
+          <span id="stat-mode" class="badge badge-green">LIVE</span>
+        </div>
+      </section>
+
+    </aside>
+  </div>
+
+  <!-- ============================================================
+       TOOLBAR
+  ============================================================ -->
+  <div class="toolbar">
+    <div class="toolbar-left">
+      <label class="btn btn-secondary btn-sm" for="import-file">📂 Import .jsonl</label>
+      <input id="import-file" type="file" accept=".jsonl" style="display:none;" />
+      <button id="btn-export-csv" class="btn btn-secondary btn-sm">💾 Export CSV</button>
+      <button id="btn-pause-polling" class="btn btn-amber btn-sm">⏸ Pause</button>
+    </div>
+    <div class="toolbar-right">
+      <span id="conn-status" class="conn-status conn-connecting">● Connecting…</span>
+      <button id="btn-stop-server" class="btn btn-danger btn-sm">⏹ Stop Server</button>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       DATA TABLE
+  ============================================================ -->
+  <div class="table-section">
+    <div class="table-header">
+      <h2 class="panel-title">Aircraft</h2>
+      <div class="table-filters">
+        <input id="table-search" type="text" class="input-field" placeholder="Search callsign, ICAO24, country, squawk…" />
+        <select id="category-filter" class="input-field select-field">
+          <option value="">All categories</option>
+        </select>
+      </div>
+    </div>
+    <div class="table-wrapper">
+      <table id="aircraft-table">
+        <thead>
+          <tr>
+            <th data-col="icao24">ICAO24</th>
+            <th data-col="callsign">Callsign</th>
+            <th data-col="origin_country">Country</th>
+            <th data-col="baro_altitude">Alt (m)</th>
+            <th data-col="geo_altitude">Geo Alt (m)</th>
+            <th data-col="velocity">Speed (m/s)</th>
+            <th data-col="true_track">Track (°)</th>
+            <th data-col="vertical_rate">V/S (m/s)</th>
+            <th data-col="on_ground">Gnd</th>
+            <th data-col="distance_km">Dist (km)</th>
+            <th data-col="bearing_deg">Bearing (°)</th>
+            <th data-col="squawk">Squawk</th>
+            <th data-col="position_source">Src</th>
+            <th data-col="last_contact">Contact</th>
+            <th data-col="inferred_category">Type</th>
+            <th data-col="alert">Alert</th>
+          </tr>
+        </thead>
+        <tbody id="aircraft-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <!-- Socket.IO client -->
+  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+  <!-- App JS -->
+  <script src="/static/js/dashboard.js"></script>
+
+</body>
+</html>

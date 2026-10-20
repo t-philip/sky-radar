@@ -1,0 +1,392 @@
+/* ============================================================
+   Sky Radar — style.css
+   Dark theme with indigo accent (#6366f1) and amber alerts.
+   ============================================================ */
+
+/* ---- Reset & base ---- */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:          #0f172a;
+  --surface:     #1e293b;
+  --surface-2:   #263147;
+  --border:      #334155;
+  --accent:      #6366f1;
+  --accent-dark: #4f46e5;
+  --text:        #e2e8f0;
+  --text-muted:  #94a3b8;
+  --amber:       #f59e0b;
+  --amber-bg:    rgba(245, 158, 11, 0.12);
+  --red:         #ef4444;
+  --green:       #22c55e;
+  --yellow:      #eab308;
+  --radius:      6px;
+}
+
+html, body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 14px;
+  min-height: 100vh;
+}
+
+/* ---- Banners ---- */
+.banner {
+  width: 100%;
+  padding: 10px 20px;
+  font-weight: 600;
+  text-align: center;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  transition: opacity 0.3s ease;
+}
+.banner-amber  { background: var(--amber);    color: #000; }
+.banner-yellow { background: var(--yellow);   color: #000; }
+.banner-red    { background: var(--red);      color: #fff; }
+
+/* ---- Header ---- */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 20px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.header-left  { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+.header-right { display: flex; align-items: center; gap: 12px; }
+
+.header-title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--text);
+  white-space: nowrap;
+}
+
+.header-location { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+
+.header-input {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  color: var(--text);
+  border-radius: var(--radius);
+  padding: 5px 10px;
+  font-size: 13px;
+  width: 200px;
+}
+.header-input-sm { width: 90px; }
+.header-input:focus { outline: none; border-color: var(--accent); }
+
+.header-meta { font-size: 12px; color: var(--text-muted); }
+
+/* ---- Badges ---- */
+.badge {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 999px;
+  letter-spacing: 0.05em;
+}
+.badge-green  { background: rgba(34, 197, 94, 0.15);  color: var(--green); }
+.badge-amber  { background: var(--amber-bg);           color: var(--amber); }
+.badge-red    { background: rgba(239, 68, 68, 0.15);   color: var(--red);   }
+
+/* ---- Buttons ---- */
+.btn {
+  cursor: pointer;
+  border: none;
+  border-radius: var(--radius);
+  font-family: inherit;
+  font-weight: 500;
+  transition: background 0.15s, transform 0.1s;
+}
+.btn:active { transform: scale(0.97); }
+.btn-primary   { background: var(--accent);   color: #fff; padding: 7px 14px; }
+.btn-primary:hover { background: var(--accent-dark); }
+.btn-secondary { background: var(--surface-2); color: var(--text); padding: 7px 14px; border: 1px solid var(--border); }
+.btn-secondary:hover { background: var(--border); }
+.btn-sm { padding: 5px 10px; font-size: 12px; }
+.btn-danger { background: #7f1d1d; color: #fca5a5; border: 1px solid #ef4444; padding: 7px 14px; }
+.btn-danger:hover { background: #991b1b; color: #fff; }
+.btn-amber  { background: #78350f; color: #fcd34d; border: 1px solid var(--amber); padding: 7px 14px; }
+.btn-amber:hover  { background: #92400e; color: #fff; }
+
+/* ---- Main row: map + sidebar ---- */
+.main-row {
+  display: flex;
+  gap: 0;
+  height: 480px;
+}
+
+.map-container {
+  flex: 0 0 65%;
+  border-right: 1px solid var(--border);
+  position: relative;
+}
+#map { width: 100%; height: 100%; }
+
+.sidebar {
+  flex: 0 0 35%;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  background: var(--surface);
+}
+
+/* ---- Panels ---- */
+.panel {
+  padding: 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.panel-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 12px;
+}
+
+/* ---- Watchlist ---- */
+.watchlist-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 10px;
+  min-height: 24px;
+}
+
+.watch-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 3px 10px;
+  font-size: 12px;
+  font-weight: 500;
+}
+.watch-tag.alert-tag { border-color: var(--amber); color: var(--amber); }
+
+.watch-tag-remove {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 1;
+  padding: 0;
+}
+.watch-tag-remove:hover { color: var(--red); }
+
+.watchlist-input-row {
+  display: flex;
+  gap: 8px;
+}
+
+/* ---- Input field ---- */
+.input-field {
+  flex: 1;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  color: var(--text);
+  border-radius: var(--radius);
+  padding: 6px 10px;
+  font-family: inherit;
+  font-size: 13px;
+}
+.input-field:focus { outline: none; border-color: var(--accent); }
+.input-field::placeholder { color: var(--text-muted); }
+
+/* ---- Stats ---- */
+.stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.stat-item {
+  background: var(--surface-2);
+  border-radius: var(--radius);
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.stat-label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; }
+.stat-value { font-size: 22px; font-weight: 700; color: var(--text); }
+.stat-alert { color: var(--amber); }
+.stat-meta { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text-muted); margin-top: 6px; }
+
+/* ---- Toolbar ---- */
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 20px;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.toolbar-left  { display: flex; gap: 10px; flex-wrap: wrap; }
+.toolbar-right { display: flex; align-items: center; gap: 10px; }
+
+/* ---- Connection status ---- */
+.conn-status {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+}
+.conn-connected    { color: var(--green); }
+.conn-connecting   { color: var(--text-muted); }
+.conn-disconnected { color: var(--red); }
+
+/* ---- Table section ---- */
+.table-section {
+  padding: 16px 20px;
+  background: var(--bg);
+}
+
+.table-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.table-header .panel-title { margin-bottom: 0; }
+.table-filters { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.table-filters .input-field { max-width: 280px; }
+.select-field { background: var(--surface-2); color: var(--text); border: 1px solid var(--border); border-radius: var(--radius); padding: 6px 10px; font-size: 13px; font-family: inherit; cursor: pointer; }
+.select-field:focus { outline: none; border-color: var(--accent); }
+
+.table-wrapper {
+  overflow-x: auto;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+}
+
+#aircraft-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+#aircraft-table thead th {
+  background: var(--surface);
+  color: var(--text-muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 9px 12px;
+  text-align: left;
+  cursor: pointer;
+  user-select: none;
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+#aircraft-table thead th:hover { color: var(--accent); }
+#aircraft-table thead th.sort-asc::after  { content: " ▲"; color: var(--accent); }
+#aircraft-table thead th.sort-desc::after { content: " ▼"; color: var(--accent); }
+
+#aircraft-table tbody tr {
+  border-bottom: 1px solid var(--border);
+  transition: background 0.15s;
+}
+#aircraft-table tbody tr:hover { background: var(--surface-2); }
+
+#aircraft-table tbody td {
+  padding: 7px 12px;
+  color: var(--text);
+}
+
+/* On-ground rows: reduced opacity */
+#aircraft-table tbody tr.on-ground { opacity: 0.6; }
+
+/* Alert rows: amber highlight */
+#aircraft-table tbody tr.alert-row {
+  border-left: 3px solid var(--amber);
+  background: var(--amber-bg);
+  opacity: 1 !important;
+}
+#aircraft-table tbody tr.alert-row:hover { background: rgba(245, 158, 11, 0.2); }
+
+/* ---- Leaflet dark popup ---- */
+.leaflet-popup-content-wrapper {
+  background: var(--surface) !important;
+  color: var(--text) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: var(--radius) !important;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.5) !important;
+  max-width: 320px;
+}
+.leaflet-popup-tip { background: var(--surface) !important; }
+.leaflet-popup-content { margin: 12px 16px !important; }
+
+/* Popup inner layout */
+.popup-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+.popup-grid {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 3px 10px;
+}
+.popup-label { color: var(--text-muted); font-size: 11px; }
+.popup-value { color: var(--text);        font-size: 12px; font-weight: 500; }
+.popup-alert { color: var(--amber); font-weight: 700; }
+
+/* ---- Plane marker (DivIcon) ---- */
+.plane-icon {
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent);
+  filter: drop-shadow(0 1px 3px rgba(0,0,0,0.6));
+  transform-origin: center center;
+  line-height: 1;
+}
+.plane-icon.alert-marker { color: var(--amber); }
+
+/* Leaflet tile layer dark tint */
+.leaflet-tile { filter: brightness(0.75) saturate(0.7); }
+
+/* ---- Home marker pin ---- */
+.home-pin {
+  font-size: 22px;
+  line-height: 1;
+}
+
+/* ---- Responsive: stack map + sidebar vertically on narrow screens ---- */
+@media (max-width: 768px) {
+  .main-row {
+    flex-direction: column;
+    height: auto;
+  }
+  .map-container {
+    flex: none;
+    height: 300px;
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+  }
+  .sidebar { flex: none; }
+  .header-input { width: 140px; }
+  .header-input-sm { width: 70px; }
+}

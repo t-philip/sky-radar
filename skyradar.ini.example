@@ -1,0 +1,21 @@
+[opensky]
+; Leave blank for anonymous access (rate-limited to 1 request per 10 s).
+; Fill in credentials for higher rate limits (5 req/s).
+username =
+password =
+
+[location]
+name = Amsterdam, Netherlands
+latitude = 52.3676
+longitude = 4.9041
+radius_km = 100.0
+
+[watchlist]
+; Comma-separated ICAO24 addresses or callsigns to highlight (case-insensitive).
+entries =
+
+[logging]
+; Days of JSONL flight logs to keep in logs/. Older date-stamped files are deleted
+; automatically after each poll. Set to 0 to keep everything forever — note that a
+; continuously running instance writes tens of thousands of lines per day.
+retention_days = 30

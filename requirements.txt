@@ -1,0 +1,8 @@
+flask>=3.0,<4.0
+flask-socketio>=5.3,<6.0
+requests>=2.31,<3.0
+geopy>=2.4,<3.0
+apscheduler>=3.10,<4.0
+# WebSocket transport for Socket.IO's threading async mode. Without it the
+# connection still works, but falls back to HTTP long-polling.
+simple-websocket>=1.0,<2.0

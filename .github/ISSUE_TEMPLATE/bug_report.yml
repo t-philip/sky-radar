@@ -1,0 +1,64 @@
+name: Bug report
+description: Something isn't working
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        One thing to rule out first: this app depends on the **OpenSky Network API**,
+        which is a free public service and does go down or rate-limit from time to
+        time. If aircraft simply stop appearing, check whether OpenSky itself is
+        responding before filing.
+
+        Please don't paste your `skyradar.ini` — it contains your own coordinates.
+        Describe the relevant setting instead.
+
+  - type: textarea
+    id: what
+    attributes:
+      label: What happens, and what did you expect?
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: How can it be reproduced?
+      placeholder: |
+        1. Start with `python app.py`
+        2. Open the dashboard
+        3. ...
+    validations:
+      required: false
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Which part?
+      options:
+        - Flask backend / startup
+        - Live map (Leaflet)
+        - Aircraft table
+        - Watchlist alerting
+        - JSONL logging
+        - OpenSky API integration
+        - Not sure
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Traceback or console output
+      render: shell
+    validations:
+      required: false
+
+  - type: input
+    id: env
+    attributes:
+      label: Python version and OS
+      placeholder: Python 3.13 on Debian 12
+    validations:
+      required: false
